@@ -1,18 +1,25 @@
-import React, { Component } from 'react';
+import React, { Component, Suspense, lazy } from 'react';
 import {Route, Switch, Redirect } from 'react-router-dom';
 import Layout from './hoc/Layout/Layout';
 import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder';
-import Checkout from './components/Checkout/Checkout';
-import Orders from './containers/Orders/Orders';
-import Auth from './containers/Auth/Auth';
+//import Checkout from './components/Checkout/Checkout';
+//import Orders from './containers/Orders/Orders';
+//import Auth from './containers/Auth/Auth';
 import Logout from './containers/Auth/Logout/Logout';
 import {connect} from 'react-redux';
 import * as actions from './store/actions/index';
+
+const Checkout = lazy(() => import('./components/Checkout/Checkout'));
+const Orders = lazy(() => import('./containers/Orders/Orders'));
+const Auth = lazy(() => import('./containers/Auth/Auth'));
+
+ 
 
 class App extends Component {
   componentDidMount() {
     this.props.onTryAutoSignup();
   }
+
 
   render() {
     let routes = (
@@ -28,7 +35,8 @@ class App extends Component {
         <Switch>
           <Route path="/checkout" component={Checkout} />  
           <Route path="/orders" component={Orders} />         
-          <Route path="/logout" component={Logout} />      
+          <Route path="/logout" component={Logout} />  
+          <Route path="/auth" component={Auth} />   
           <Route path="/" component={BurgerBuilder} />
         </Switch>
       )
@@ -37,8 +45,10 @@ class App extends Component {
     return (
       <div>
         <Layout> 
-          {routes}
-        </Layout>
+          <Suspense fallback={<div>Loading...</div>} >
+            {routes}
+          </Suspense>
+        </Layout>        
       </div>
     );
   }

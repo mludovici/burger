@@ -11,7 +11,7 @@ import * as actions from '../../store/actions/index';
 import axios from '../../axios-orders';
 
 
-class BurgerBuilder extends Component {
+export class BurgerBuilder extends Component {
     // constructor(props) {
     //     super(props);
     //     this.purchaseHandler = this.purchaseHandler.bind(this)
@@ -108,7 +108,7 @@ class BurgerBuilder extends Component {
                         disabled={disabledInfo}
                         purchasable={this.updatePurchaseState(this.props.ings)}
                         ordered={this.purchaseHandler}
-                        price={+this.props.price.toFixed(2)}
+                        price={+this.props.price}
                     />
                 </Aux> 
             )
