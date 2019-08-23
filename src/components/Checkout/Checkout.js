@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useContext } from 'react'
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary';
 import {Route, Redirect} from 'react-router-dom';
 import ContactData from './ContactData/ContactData';
@@ -7,37 +7,34 @@ import {connect} from 'react-redux';
 
 import {someContext} from '../../../src/index';
 
-class Checkout extends Component {
-    static contextType = someContext;
+const checkout = props => {
+    const {message} = useContext(someContext);
 
-    checkoutCancelled = () => {
-        this.props.history.goBack();
+    const checkoutCancelled = () => {
+        props.history.goBack();
     }
 
-    checkoutContinued = () => {
-        this.props.history.replace('/checkout/contact-data');
+    const checkoutContinued = () => {
+        props.history.replace('/checkout/contact-data');
     }
 
-    render() {
-        let weirdMessage = this.context;
         let summary = <Redirect to ="/" />
-        if (this.props.ings) {
-            const purchasedRedirect = this.props.purchased ? <Redirect to ="/" /> : null;
+        if (props.ings) {
+            const purchasedRedirect = props.purchased ? <Redirect to ="/" /> : null;
 
             summary = (
                 <someContext.Consumer>
                     {value => (
                         <div>
-                        {console.log("Global value from Context:", value)}
-                        {console.log("The weird message from context is also:", weirdMessage)}
+                        {console.log("message from context:", message)}
                         {purchasedRedirect }
                         <CheckoutSummary 
-                            ingredients={this.props.ings}
-                            checkoutCancelled={this.checkoutCancelled}
-                            checkoutContinued={this.checkoutContinued}
+                            ingredients={props.ings}
+                            checkoutCancelled={checkoutCancelled}
+                            checkoutContinued={checkoutContinued}
                         />  
                         <Route 
-                            path={this.props.match.path + '/contact-data'} 
+                            path={props.match.path + '/contact-data'} 
                             component={ContactData}
                         />
                     </div> 
@@ -46,7 +43,7 @@ class Checkout extends Component {
             )
         }
         return summary;
-    }
+    
 }
 
 const mapStateToProps = state => {
@@ -57,4 +54,4 @@ const mapStateToProps = state => {
 }
 
 
-export default connect(mapStateToProps) (Checkout);
+export default connect(mapStateToProps) (checkout);

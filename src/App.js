@@ -1,4 +1,4 @@
-import React, { Component, Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useEffect} from 'react';
 import {Route, Switch, Redirect } from 'react-router-dom';
 import Layout from './hoc/Layout/Layout';
 import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder';
@@ -14,13 +14,15 @@ const Orders = lazy(() => import('./containers/Orders/Orders'));
 const Auth = lazy(() => import('./containers/Auth/Auth'));
 
 
-class App extends Component {
-  componentDidMount() {
-    this.props.onTryAutoSignup();
-  }
+const App = (props) =>  {
+  const {onTryAutoSignup} = props;
+  
+  useEffect(() =>  {
+    onTryAutoSignup();
+  },[onTryAutoSignup]);
 
 
-  render() {
+
     let routes = (
       <Switch>
         <Route path="/auth" component={Auth} />    
@@ -29,7 +31,7 @@ class App extends Component {
       </Switch>
     );
 
-    if (this.props.isAuthenticated) {
+    if (props.isAuthenticated) {
       routes = (
         <Switch>
           <Route path="/checkout" component={Checkout} />  
@@ -44,13 +46,12 @@ class App extends Component {
     return (
       <div>
         <Layout> 
-          <Suspense fallback={<div>Loading...</div>} >
+          <Suspense fallback={<p>Loading...</p>} >
             {routes}
           </Suspense>
         </Layout>        
       </div>
-    );
-  }
+    );  
 }
 
 const mapStateToProps = state => {
