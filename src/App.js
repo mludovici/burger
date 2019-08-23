@@ -13,7 +13,6 @@ const Checkout = lazy(() => import('./components/Checkout/Checkout'));
 const Orders = lazy(() => import('./containers/Orders/Orders'));
 const Auth = lazy(() => import('./containers/Auth/Auth'));
 
- 
 
 class App extends Component {
   componentDidMount() {

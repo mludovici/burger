@@ -5,8 +5,10 @@ import ContactData from './ContactData/ContactData';
 import {connect} from 'react-redux';
 //import * as actions from '../../store/actions/index';
 
-class Checkout extends Component {
+import {someContext} from '../../../src/index';
 
+class Checkout extends Component {
+    static contextType = someContext;
 
     checkoutCancelled = () => {
         this.props.history.goBack();
@@ -17,23 +19,30 @@ class Checkout extends Component {
     }
 
     render() {
+        let weirdMessage = this.context;
         let summary = <Redirect to ="/" />
         if (this.props.ings) {
             const purchasedRedirect = this.props.purchased ? <Redirect to ="/" /> : null;
 
             summary = (
-                <div>
-                    {purchasedRedirect }
-                    <CheckoutSummary 
-                        ingredients={this.props.ings}
-                        checkoutCancelled={this.checkoutCancelled}
-                        checkoutContinued={this.checkoutContinued}
-                    />  
-                    <Route 
-                        path={this.props.match.path + '/contact-data'} 
-                        component={ContactData}
-                    />
-                </div>                 
+                <someContext.Consumer>
+                    {value => (
+                        <div>
+                        {console.log("Global value from Context:", value)}
+                        {console.log("The weird message from context is also:", weirdMessage)}
+                        {purchasedRedirect }
+                        <CheckoutSummary 
+                            ingredients={this.props.ings}
+                            checkoutCancelled={this.checkoutCancelled}
+                            checkoutContinued={this.checkoutContinued}
+                        />  
+                        <Route 
+                            path={this.props.match.path + '/contact-data'} 
+                            component={ContactData}
+                        />
+                    </div> 
+                    )}                       
+                </someContext.Consumer>             
             )
         }
         return summary;

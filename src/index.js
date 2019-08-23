@@ -32,14 +32,23 @@ sagaMiddleware.run(watchAuth);
 sagaMiddleware.run(watchBurgerBuilder);
 sagaMiddleware.run(watchOrder);
 
+export const someContext = React.createContext({
+    someMessage: "Hello this is WOrld!"
+});
 
 const app = (
     //Provider has to wrap everything
-    <Provider store={store}>
-        <BrowserRouter>
-            <App />
+    <BrowserRouter>
+        <Provider store={store}>
+                       
+
+            <someContext.Provider value={{message:"Ringeldingeldong"}}>
+                <App />
+            
+            </someContext.Provider>
+            
+        </Provider>
         </BrowserRouter>
-    </Provider>
 )
 
 ReactDOM.render(app, document.getElementById('root'));
